@@ -1,1 +1,4 @@
 node_modules
+
+# Mongo db
+config/default.json
