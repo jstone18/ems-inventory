@@ -15,6 +15,13 @@ router.post("/", (req, res) => {
 	res.send("Add new cabinet");
 });
 
+// @route     GET api/cabinets/:id
+// @desc      Get cabinet
+// @access    Private
+router.get("/:id", (req, res) => {
+	res.send("Get cabinet");
+});
+
 // @route     PUT api/cabinets/:id
 // @desc      Update cabinet
 // @access    Private
