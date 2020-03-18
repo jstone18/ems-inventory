@@ -20,6 +20,7 @@ app.use("/api/users", require("./routes/users"));
 app.use("/api/cabinets", require("./routes/cabinets"));
 app.use("/api/items", require("./routes/items"));
 
+// Development or production port variable
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

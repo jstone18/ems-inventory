@@ -4,21 +4,21 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("config");
 
-// Validation Check
+// Validation check
 const { check, validationResult } = require("express-validator/check");
 
 const User = require("../models/User");
 
 // @route     POST api/users
-// @desc      Register user
+// @desc      Register a user
 // @access    Public
 router.post(
 	"/",
 	[
-		check("name", "Please enter a name")
+		check("name", "Name enter a name")
 			.not()
 			.isEmpty(),
-		check("email", "Please enter a valid email").isEmail(),
+		check("email", "Please include a valid email").isEmail(),
 		check(
 			"password",
 			"Please enter a password with 6 or more characters"
@@ -33,33 +33,40 @@ router.post(
 		const { name, email, password } = req.body;
 
 		try {
-			// Check for existing email
+			// Check if user email already exists
 			let user = await User.findOne({ email });
 			if (user) {
-				return user.status(400).json({ msg: "User already exists" });
+				return res.status(400).json({ msg: "User already exists" });
 			}
-			// Create new user if none exists
+
+			// Create new User if none exists
 			user = new User({
 				name,
 				email,
 				password
 			});
-			// Hash password with bcrypt
+
+			// Hash Password with bCrypt
 			const salt = await bcrypt.genSalt(10);
 			user.password = await bcrypt.hash(password, salt);
-			// Save new user to db
+
+			// Save new User to db
 			await user.save();
+
 			// Create payload object to send in token
 			const payload = {
 				user: {
 					id: user.id
 				}
 			};
-			// Create token object
+
+			// create token object
 			jwt.sign(
 				payload,
-				config.get("jwtsecret"),
-				{ expiresIn: 36000 },
+				config.get("jwtSecret"),
+				{
+					expiresIn: 360000
+				},
 				(err, token) => {
 					if (err) throw err;
 					res.json({ token });
